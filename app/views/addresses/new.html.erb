@@ -1,0 +1,35 @@
+<h2> Add Address </h2>
+<%= form_for @address do |f| %>
+	<% if @address.errors.any? %>
+	<h3>These validations failed</h3>
+	<ul>
+		<% @address.errors.full_messages.each do |msg| %>
+			<li> <%= msg %> </li>
+		<% end %>
+	</ul>
+	<% end %>
+
+
+	<label>Details</label><br/>
+	<%= f.text_area :details %><br/>
+
+	<label>City </label><br/>
+	<%= f.text_field :city %>
+	<br/>
+
+	<label>State </label><br/>
+	<%= f.text_field :state %> <br/>
+
+	<label>Pincode </label><br/>
+	<%= f.text_field :pincode %> 
+	<span id= "priceMsg"> </span>
+	<br/>
+
+	<label>Landmark </label><br/>
+	<%= f.text_field :landmark %> <br/>
+
+	<%= f.submit %>
+
+<% end %>
+
+	

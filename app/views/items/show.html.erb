@@ -1,0 +1,72 @@
+
+<h2> <%= @item.name %> <%= @item.code%> </h2>
+<%= image_tag(@item.image_url) %>
+
+<% if user_signed_in? && current_user.is_admin %> 
+  
+	<%= link_to "edit", edit_item_path(@item.id), %> | <%= link_to "destroy", item_path(@item.id), method: :delete, data: {confirm: "Are you sure?"} %>
+<% end %> 
+
+<p> Category : - <%= link_to @item.category.name, category_path(@item.category_id) %> </p>
+
+<p> INR <%= @item.price %> - <%= @item.description %> </p>
+
+<% if @item.stock > 0 %>
+	<p> In stock </p>
+<% else %>
+	<p> Currently Unavailable </p>
+<% end %>
+
+<h2> Listing Reviews </h2>
+	<% if @item.reviews.empty? %>
+		<li> No reviews yet. Be the first one to add a review. </li>
+	<% else %>
+		<ul id="reviewList">
+			<% @item.reviews.each do |review| %>
+				<li id="review_<%= review.id %>"> <%= review.title %> - <%= review.rating %> 
+				<% if user_signed_in? && (review.user_id == current_user.id || current_user.is_admin) %>
+					<%= link_to "remove", review_path(review.id), method: :delete, data: {confirm: "Are you sure?"}, remote: true %>
+				<% end %> </li>
+			<% end %>
+		</ul>
+	<% end %>
+
+
+<h2> Add Review </h2>
+<% if user_signed_in? %>
+<span id="formError">
+</span>
+	<%= form_for @review, :remote => true do |f| %>
+
+		<%= f.hidden_field :item_id, value: @item.id %>
+
+		<label>Title</label><br/>
+		<%= f.text_field :title %> <br/>
+
+		<label>Description</label><br/>
+		<%= f.text_area :description %> <br/>
+
+		<label>Rating</label> <br/>
+		<%= f.radio_button :rating, 1 %> 1
+		<%= f.radio_button :rating, 2 %> 2
+		<%= f.radio_button :rating, 3 %> 3
+		<%= f.radio_button :rating, 4 %> 4
+		<%= f.radio_button :rating, 5 %> 5 <br/>
+
+		<%= f.submit %>
+	<% end %>
+<% end %>
+
+<h2>Buy Now</h2>
+<% if user_signed_in? %> 
+	<%= form_for @cart_line_item do |f| %>
+		<%= f.hidden_field :item_id, value: @item.id %>
+		<%= f.label :quantity %> 
+		<%= f.select :quantity, (1..10).to_a %> <br/>
+		<%= f.submit "Add to cart" %>
+	<% end %>
+<% else %>
+	<b>You need to register before buying</b>
+<% end %>
+
+<%= link_to "back", :back %>

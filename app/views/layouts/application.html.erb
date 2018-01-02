@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ecommerce</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<% if user_signed_in? %> 
+	Welcome <%= current_user.username %>
+	
+	 (<%= link_to "Account Setting", edit_user_registration_path %> | <%= link_to "Your Cart (#{current_user.cart_line_items.pluck(:quantity).inject(:+)})", cart_line_items_path %> | <%= link_to "Your Orders", orders_path %>| <%= link_to "Addresses", addresses_path %> | <%= link_to "Logout", destroy_user_session_path, method: :delete %>)
+	
+<% else %>
+  <%= link_to "Login", new_user_session_path %> | <%= link_to "Register", new_user_registration_path %>
+<% end %>
+
+<a href="/categories">List Categories</a>
+<!--
+<%# link_to 'Listing Categories', categories_path %>
+-->
+
+<%= link_to "List Items", items_path %>
+<!-- products_path returns the string "\products" which will be used as the uri for the href attribute
+<a href="/products">List Products</a>
+-->
+<br/>
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+<%= yield %>
+
+</body>
+</html>

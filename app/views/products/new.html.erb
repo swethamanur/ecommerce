@@ -1,0 +1,30 @@
+<h2> Add product </h2>
+
+<!-- The following is a normal way of doing it , but below one , it gets all the extra attributes automatically -->
+<!-- <form action="......" method="post">
+</form> -->
+
+<%= form_for @product do |f| %>
+
+
+	<label>Name </label><br/>
+	<%= f.text_field :name %> <br/>
+
+	<label>Description </label><br/>
+	<%= f.text_area :description %> <br/>
+
+	<label>Price </label><br/>
+	<%= f.text_field :price %> <br/>
+
+	<label>Stock </label><br/>
+	<%= f.text_field :stock %> <br/>
+
+	<label>Release Time </label><br/>
+	<%= f.datetime_select :release_datetime %> <br/>
+
+	<label>Cod Available </label><br/>
+	<%= f.check_box :cod_available %> <br/>
+
+	<%= f.submit %>
+
+<% end %>

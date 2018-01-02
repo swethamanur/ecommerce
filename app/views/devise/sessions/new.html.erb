@@ -1,0 +1,50 @@
+<h2>Log in</h2>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true %>
+    <span id= "emailError"> </span><br/>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %> (<a href= "#" id="show"> Show </a>) <br />
+    <%= f.password_field :password, autocomplete: "off" %>
+    <span id = "passwordError"> </span><br/>
+  </div>
+
+  <% if devise_mapping.rememberable? -%>
+    <div class="field">
+      <%= f.check_box :remember_me %>
+      <%= f.label :remember_me %>
+    </div>
+  <% end -%>
+
+  <div class="actions">
+    <%= f.submit "Log in" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+
+<script>
+
+  var emailErrorHandle = document.querySelector('#emailError');
+  var passwordErrorHandle = document.querySelector('#passwordError');
+
+  var showHandle = document.querySelector('#show');
+  var showToggle = true;
+
+  showHandle.addEventListener('click', function(e){
+    if(showToggle){
+      passwordHandle.setAttribute('type', 'text');
+      showHandle.innerHTML = 'Hide';
+      showToggle = false;
+    } else {
+      passwordHandle.setAttribute('type', 'password');
+      showHandle.innerHTML = 'Show';
+      showToggle = true; 
+    }
+    e.preventDefault();
+  }, false);
+</script>

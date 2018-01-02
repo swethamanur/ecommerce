@@ -1,0 +1,8 @@
+<%if @brand.errors.any? %>
+$('#errors').html("<%= @brand.errors.full_messages.join(" ,") %>")
+<%else %>
+$('#errors').hide();
+$('#brandList').append("<%=escape_javascript render('brand')%>")
+$('#new_brand')[0].reset();
+<% end %>
+

@@ -1,0 +1,3 @@
+<li> <%= @review.title %> - <%= @review.rating %>
+<%= link_to "remove", review_path(@review.id), method: :delete, data: {confirm: "Are you sure?"} %>
+</li>

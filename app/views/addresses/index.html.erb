@@ -1,0 +1,27 @@
+<h2> Your Addresses </h2>
+
+<% if @addresses.empty? %>
+	<p> No address has not yet been added. </p>
+<% else %>
+	<table border="1">
+	<thead>
+		<tr>
+			<th> # </th>
+			<th> Details </th>
+			<th> Landmark </th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @addresses.each_with_index do |address, index| %>
+		<tr>
+			<td><%= index + 1 %></td>
+			<td><%= address.details %></td>
+			<td><%= address.landmark %></td>
+
+			<td><%= link_to "remove", address_path(address.id), method: :delete, data: { confirm: "Are you sure to remove the product from the cart?"} %></td>
+		</tr>
+		<% end %>
+	</tbody>
+<% end %>
+
+<h3> <%= link_to "Add New Address", new_address_path %> </h3> 

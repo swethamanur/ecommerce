@@ -1,0 +1,15 @@
+
+<h2> <%= @category.name %> </h2>
+
+<% if @category.items.empty? %>
+	<h3> No items found </h3>
+<% else %>
+	<h3> Items belonging to <%= @category.name %> (<%= @category.items.size %>)</h3>	
+
+<ul>	
+	<% @category.items.each do |item| %>
+	<li> <%= link_to item.name, item_path(item.id) %> </li>
+	<% end %>
+</ul>
+<% end %>
+<%= link_to "back", :back %>

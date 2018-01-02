@@ -1,0 +1,78 @@
+<h2> Add Item </h2>
+<%= form_for @item do |f| %>
+	<% if @item.errors.any? %>
+	<h3>These validations failed</h3>
+	<ul>
+		<% @item.errors.full_messages.each do |msg| %>
+			<li> <%= msg %> </li>
+		<% end %>
+	</ul>
+	<% end %>
+
+
+	<label>Category</label><br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name %><br/>
+
+	<label>Name </label><br/>
+	<%= f.text_field :name %> 
+	<span id="nameMsg"> </span> 
+	<!-- span is used to display a text witout occupying much space -->
+	<br/>
+
+	<label>Description </label><br/>
+	<%= f.text_area :description %> <br/>
+
+	<label>Price </label><br/>
+	<%= f.text_field :price %> 
+	<span id= "priceMsg"> </span>
+	<br/>
+
+	<label>Stock </label><br/>
+	<%= f.text_field :stock %> <br/>
+
+	<label>Release Time </label><br/>
+	<%= f.datetime_select :release_datetime %> <br/>
+
+	<label>Cod Available </label><br/>
+	<%= f.check_box :cod_available %> <br/>
+
+	<label>Image URL</label><br/>
+	<%= f.text_field :image_url %> <br/>
+
+	<%= f.submit %>
+
+
+	<script>
+	var nameHandle = document.getElementById('item_name');
+	var priceHandle = document.getElementById('item_price');
+	var categoryHandle= document.querySelector('#item_category_id');
+	var nameMsgHandle = document.getElementById('nameMsg');
+	var priceMsgHandle = document.getElementById('priceMsg');
+	var priceFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+	var nameFormatter = /^[a-zA-Z\s]*$/;
+
+	nameHandle.addEventListener('blur', function(){
+		if(nameHandle.value == ""){
+			nameMsgHandle.innerHTML = "Cant be blank";
+		}else if(!nameFormatter.test(nameHandle.avlue)){
+			nameMsgHandle.innerHTML = "should contain only alphabets";
+		}
+		else{
+			nameMsgHandle.innerHTML = "";
+		}
+	}, false);
+
+	priceHandle.addEventListener('blur', function(){
+		if(priceHandle.value == ""){
+			priceMsgHandle.innerHTML = "cant be blank";
+		} else if(!priceFormatter.test(priceHandle.value)){
+			priceMsgHandle.innerHTML = "should contain only numbers";
+		} else if (priceHandle.value <= 0){
+			priceMsgHandle.innerHTML = "should be greater than 0";
+		} else {
+			priceMsgHandle.innerHTML = "";
+		}	
+	}, false);
+
+	</script>
+<% end %>

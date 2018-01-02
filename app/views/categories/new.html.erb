@@ -1,0 +1,36 @@
+<%= form_for @category do |f| %>
+	<% if @category.errors.any? %>
+	<h3>These validations failed</h3>
+	<ul>
+		<% @category.errors.full_messages.each do |msg| %>
+			<li> <%= msg %> </li>
+		<% end %>
+	</ul>
+	<% end %>
+
+	<label>Name </label><br/>
+	<%= f.text_field :name %> 
+	<span id="nameMsg"> </span> 
+	<br/>
+
+	<%= f.submit %>
+
+
+	<script>
+	var nameHandle = document.getElementById('category_name');
+	var nameMsgHandle = document.getElementById('nameMsg');
+	var nameFormatter = /^[a-zA-Z]+$/;
+
+	nameHandle.addEventListener('blur', function(){
+		if(nameHandle.value == ""){
+			nameMsgHandle.innerHTML = "Cant be blank";
+		}else if(!nameFormatter.test(nameHandle.value)){
+			nameMsgHandle.innerHTML = "should contain only alphabets";
+		}
+		else{
+			nameMsgHandle.innerHTML = "";
+		}
+	}, false);
+
+	</script>
+<% end %>

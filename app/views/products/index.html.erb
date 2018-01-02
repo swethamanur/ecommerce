@@ -1,0 +1,15 @@
+<!-- <a href="/products/new"> Add Products </a> -->
+<%= link_to "Add Product", new_product_path %>
+<!-- new_product_path returns the string /products/new -->
+
+<h2>Listing Products</h2>
+
+<ol>
+	<% @products.each do |product| %>
+		<li><%= product.name %>-<%= product.description %>-INR <%= product.price %>-<%= product.stock %>-<%= product.cod_available %>-<%= product.release_datetime %>  </li>
+	<% end %>
+</ol>	
+
+
+ 
+

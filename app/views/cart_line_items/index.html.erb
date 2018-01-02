@@ -1,0 +1,38 @@
+<h2>Your Cart (<%= @cart_line_items.pluck(:quantity).inject(:+) %> items)</h2>
+<% sum = 0 %>
+<table border="1">
+	<thead>
+		<tr>
+			<th> # </th>
+			<th> Name </th>
+			<th> Price </th>
+			<th> Quantity </th>
+			<th> Total </th>
+			<th> Action </th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @cart_line_items.each_with_index do |cart_line_item, index| %>
+		<tr>
+			<td><%= index + 1 %></td>
+			<td><%= cart_line_item.item.name %></td>
+			<td><%= cart_line_item.item.price %></td>
+			<td><%= cart_line_item.quantity %></td>
+			<td><%= cart_line_item.item.price * cart_line_item.quantity %></td>
+
+			<% sum += cart_line_item.item.price * cart_line_item.quantity %>
+
+			<td><%= link_to "remove", cart_line_item_path(cart_line_item.id), method: :delete, data: { confirm: "Are you sure to remove the product from the cart?"} %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<h3> Total : <%= sum %></h3>
+
+
+<%= form_for @order do |f| %> 	
+	<%= f.submit "Checkout" %>
+<% end %>
+
+<%= link_to "continue shopping", items_path %>

@@ -1,0 +1,130 @@
+
+
+<% if user_signed_in? && current_user.is_admin %> 
+	<%= link_to "Add Item", new_item_path %>
+	<%= link_to "Add Tax", new_tax_path %>
+<% end %>
+
+
+<h1> Listing Items </h1>
+<h2> Search Item </h2>
+<div id="categories">
+	<% Category.all.each do |category| %>
+		<%#= radio_button_tag "category", category.id %>
+		<%= check_box_tag category.name, category.id %>
+		<label for="<%= category.name %>"> <%= category.name %>
+	<% end %>
+
+</div>
+
+<input type="checkbox" id="cod" > COD AVAILABLE <br/>
+
+<input type="text" placeholder="search" id="search"> <br/>
+
+<a href="url1" value = "0-100" id="price_1"> Price less than 100 <br/>
+<a href="url2" value= "100-500 "id="price_2"> Price 100-500<br/>
+<a href="url3" value= "500-100000000" id="price_3"> Price 500+<br/>
+
+<ol id="itemsList">
+	<% @items.each do |item| %>
+	<li>
+		<%= item.name %>-<% item.price %> -<%= item.release_datetime %>
+		<%= link_to item.name, item_path(item.id) %>
+	</li>
+	<% end %>
+</ol>
+
+
+<!--<%= will_paginate @posts %> -->
+
+
+<!-- render page links in the view: -->
+<!--<%= will_paginate @posts %> -->
+
+<script>
+	var categoriesHandle = document.getElementById('categories');
+	var categoryInputs = categoriesHandle.getElementsByTagName('input');
+	var itemsListHandle = document.getElementById('itemsList');
+
+	var searchHandle = document.getElementById('search');
+
+	var codHandle = document.getElementById('cod');
+	var price_1Handle= document.getElementById('price_1');
+	var price_2Handle = document.getElementById('price_2');
+	var price_3Handle = document.getElementById('price_3');
+
+	function buildItemHtml(items){
+		itemsList.innerHTML = "";
+		items.forEach(function(item){
+			var li = document.createElement('li');
+			var a = document.createElement('a');
+			var href = document.createAttribute('href');
+			href.value = `/items/${item.id}`;
+			a.setAttributeNode(href);
+			var text = document.createTextNode(item.name);
+			a.appendChild(text);
+			li.appendChild(a);
+			itemsList.appendChild(li);
+		});
+	}
+
+	categoriesHandle.addEventListener('click', function(){
+		var categorySelected = [];
+		for(var i = 0; i < categoryInputs.length; i++){
+			if(categoryInputs[i].checked){
+				categorySelected.push(categoryInputs[i].value);
+			}
+		}
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '../ajax/find_by_categories?category_ids=' + categorySelected.join(","));
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				buildItemHtml(JSON.parse(xhr.responseText));
+			}
+		}
+		xhr.send();
+	}, false);
+
+	searchHandle.addEventListener('keyup', function(){
+			if(searchHandle.value.length >= 3){
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', '../ajax/autocomplete?search=' + searchHandle.value);	
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4 && xhr.status == 200){
+						buildItemHtml(JSON.parse(xhr.responseText));
+					}
+				}
+				xhr.send()
+			} 
+	}, false);
+
+	codHandle.addEventListener('click', function(){
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '../ajax/cod_available?cod=' + codHandle.checked);
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState == 4 && xhr.status == 200){
+						buildItemHtml(JSON.parse(xhr.responseText));
+					}
+			}
+			xhr.send()
+	}, false);
+
+	price_1Handle.addEventListener('click', function(){
+
+		var itemsSelected = [];
+		for (var i = price_1Handle.value.split("-")[0]; i < = price_1Handle.value.split("-")[1]; i ++){
+			itemsSelected.push()
+		}
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '../ajax/by_price?price_range=' + price_1Handle.value.split("-"));
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				buildItemHtml(JSON.parse(xhr.responseText));
+			}
+		}
+		xhr.send()
+	}, false);
+</script>
+
+

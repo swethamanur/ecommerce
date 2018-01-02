@@ -1,0 +1,10 @@
+// $('#reviewList') == document.getElementById('reviewList') == document.querySelector('#reviewList')
+
+<% if @review.errors.any? %>
+	$('#formError').html("<%= @review.errors.full_messages.join(" ,")%>");
+<% else %>
+	$('#formError').hide();
+	$('#reviewList').append("<%= escape_javascript render('review')%>");
+	//$('#new_review')[0].reset(); //new_review is returned as an array
+	document.getElementById('new_review').reset(); // javascript and jquery can bbe combined in the code
+<% end %>

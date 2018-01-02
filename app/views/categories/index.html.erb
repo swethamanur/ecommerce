@@ -1,0 +1,10 @@
+<%= link_to "Add Category", new_category_path %>
+<h1>Listing Categories- <%=@categories.length %></h1>
+	
+<ul>
+	<% @categories.each do |category| %>
+	<li>
+		<%= link_to category.name, category_path(category.id) %>
+	</li>
+	<% end %>
+</ul>

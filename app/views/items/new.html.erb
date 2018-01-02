@@ -1,0 +1,144 @@
+<h2> Add product </h2>
+<%= form_for @item do |f| %>
+	<% if @item.errors.any? %>
+	<h3>These validations failed</h3>
+	<ul>
+		<% @item.errors.full_messages.each do |msg| %>
+			<li> <%= msg %> </li>
+		<% end %>
+	</ul>
+	<% end %>
+
+
+	<label>Category</label><br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name %><br/>
+
+	<label>Sub Category</label><br/>
+	<%= f.collection_select :sub_category_id, [], :id, :name, prompt: "Select" %> <br/>
+
+	<label>Name </label><br/>
+	<%= f.text_field :name %> 
+	<span id="nameMsg"> </span> 
+	<!-- span is used to display a text witout occupying much space -->
+	<br/>
+
+	<label>Description </label><br/>
+	<%= f.text_area :description %> <br/>
+
+	<label>Price </label><br/>
+	<%= f.text_field :price %> 
+	<span id= "priceMsg"> </span>
+	<br/>
+
+	<label> GST Tax </label><br/>
+		<select id="tax">
+			<option value=""> Select Tax </option>
+			<option value= "5">5%</option>
+			<option value= "15">15% </option>
+			<option value= "28"> 28% </option>
+		</select>
+		
+		<br/>	
+
+	<label > Net Price </label><br/>
+	<%= f.text_field :net_price %>
+	<br/>
+
+
+	<label>Stock </label><br/>
+	<%= f.text_field :stock %> <br/>
+
+	<label>Release Time </label><br/>
+	<%= f.datetime_select :release_datetime %> <br/>
+
+	<label>Cod Available </label><br/>
+	<%= f.check_box :cod_available %> <br/>
+
+	<label>Image URL</label><br/>
+	<%= f.text_field :image_url %> <br/>
+
+	<%= f.submit %>
+
+
+	<script>
+	var nameHandle = document.getElementById('item_name');
+	var priceHandle = document.getElementById('item_price');
+	var categoryHandle= document.querySelector('#item_category_id');
+	var nameMsgHandle = document.getElementById('nameMsg');
+	var priceMsgHandle = document.getElementById('priceMsg');
+	var taxHandle = document.getElementById('tax');
+	var netAmountHandle = document.getElementById('item_net_price');
+
+	var itemCategory = document.querySelector('#item_category_id');
+	var itemSubCat = document.querySelector('#item_sub_category_id');
+
+	var priceFormatter = /^[0-9]*(?:\.\d{1,2})?$/;
+	var nameFormatter = /^[a-zA-Z\s]*$/;
+
+	itemCategory.addEventListener('change', function(){
+		if(itemCategory.value !== ""){
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '../categories/find_sub_categories?category_id=' + itemCategory.value);
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4 && xhr.status == 200){
+					var subCategories = JSON.parse(xhr.responseText);
+					itemSubCat.innerHTML = "";
+					subCategories.forEach(function(subCategory){
+						var option = document.createElement('option'); // creates an option tag <option> </option>
+						var optValue = document.createAttribute('value'); // create a value attribute - value 
+						optValue.value = subCategory.id // assigns the sc id to the value attribute - value = :id 
+						option.setAttributeNode(optValue); // set the attribute to the option tag = <option value=“id”></option> 
+						var txt = document.createTextNode(subCategory.name); // create text in isolation = name 
+						option.appendChild(txt); // takes the text and appends it to the option tag = <option value=“id”>name</option> 
+						itemSubCat.appendChild(option); // take the option tag and append it to subcategory handle = <select><option value=“id”>name</option> </select>
+					}); 
+				}
+			}
+			xhr.send();
+		}
+	}, false)
+
+
+
+
+	taxHandle.addEventListener('change', function(){
+		if(taxHandle.value !== "" && priceHandle.value !== ""){
+			netAmountHandle.value = Math.round(Number(priceHandle.value) + Number((priceHandle.value * taxHandle.value / 100)));
+		} else {
+			netAmountHandle.value = priceHandle.value;
+		}
+	}, false);
+
+	// netAmountHandle.addEventListener('blur', function(){
+	// 	if(taxHandle.value){
+	// 		netAmountHandle.value = Math.round(Number(priceHandle.value) + Number((priceHandle.value * taxHandle.value / 100)));
+	// 	} else {
+	// 		netAmountHandle.value = "";
+	// 	}
+	// }, false);
+
+	nameHandle.addEventListener('blur', function(){
+		if(nameHandle.value == ""){
+			nameMsgHandle.innerHTML = "Cant be blank";
+		}else if(!nameFormatter.test(nameHandle.avlue)){
+			nameMsgHandle.innerHTML = "should contain only alphabets";
+		}
+		else{
+			nameMsgHandle.innerHTML = "";
+		}
+	}, false);
+
+	priceHandle.addEventListener('blur', function(){
+		if(priceHandle.value == ""){
+			priceMsgHandle.innerHTML = "cant be blank";
+		} else if(!priceFormatter.test(priceHandle.value)){
+			priceMsgHandle.innerHTML = "should contain only numbers";
+		} else if (priceHandle.value <= 0){
+			priceMsgHandle.innerHTML = "should be greater than 0";
+		} else {
+			priceMsgHandle.innerHTML = "";
+		}	
+	}, false);
+
+	</script>
+<% end %>
